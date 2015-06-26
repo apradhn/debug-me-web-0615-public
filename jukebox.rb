@@ -1,3 +1,5 @@
+require "pry"
+
 def jukebox(command)
   if command.downcase == "list"
     list_library
@@ -26,7 +28,7 @@ def parse_artist(command, lib)
   else
     lib.each do |artist, hash|
       if command.downcase == artist.to_s.gsub("_"," ").downcase
-        puts list_artist(artist, lib)
+        puts list_artist(artist, lib[artist])
         parsed = true
         break
       end
@@ -39,11 +41,12 @@ def play_song(command, lib)
   lib.each do |artist, hash|
     hash.each do |album_name, albums_hash|
       albums_hash.each do |album, songs_hash|
-        songs_hash.each do |songs|
+        songs_hash.each do |songs_key, songs|
           songs.each do |song|
             if song.downcase == command.downcase
-            puts "Now Playing: #{artist[command].strip}: #{album} - #{song}\n\n"
-            return true
+              puts "Now Playing: #{artist}: #{album} - #{song}\n\n"
+              return true
+            end
           end
         end
       end
@@ -66,5 +69,4 @@ end
 def not_found(command)
   puts "I did not understand '#{command}'!\n\n"
   true
-end
 end
